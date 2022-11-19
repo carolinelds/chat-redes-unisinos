@@ -8,6 +8,16 @@ function renderMessage(message) {
     `);
 };
 
+socket.on('receivedMessage', function(message) {
+    renderMessage(message);
+});
+
+socket.on('previousMessages', function(messages) {
+    for (const message of messages) {
+        renderMessage(message);
+    };
+});
+
 $('#user').submit(function(event) {
     event.preventDefault();
 
@@ -26,8 +36,6 @@ $('#user').submit(function(event) {
         </div>
         <button type="submit">Enviar</button>
     `;
-
-    //socket.emit('registerUser', author);
 });
 
 $('#chat').submit(function(event) {
