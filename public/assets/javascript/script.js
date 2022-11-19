@@ -1,5 +1,13 @@
 const socket = io('http://localhost:3000');
 
+function renderMessage(message) {
+    $('.messages').append(`
+        <div class="message">
+            <strong>${message.author}</strong> ${message.message}
+        </div>
+    `);
+};
+
 $('#user').submit(function(event) {
     event.preventDefault();
 
@@ -33,6 +41,8 @@ $('#chat').submit(function(event) {
         message: message,
         author: author
     };
+
+    renderMessage(messageObject);
 
     socket.emit('sendMessage', messageObject);
 });
