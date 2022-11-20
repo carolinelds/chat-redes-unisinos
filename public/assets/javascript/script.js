@@ -3,9 +3,13 @@ const socket = io('http://localhost:3000');
 function renderMessage(message) {
     $('.messages').append(`
         <div class="message">
-            <strong>${message.author}</strong> ${message.message}
+            <p class="time">(${message.time})</p>
+            <p class="content"><strong>${message.author}</strong> ${message.message}</p>
         </div>
     `);
+
+    const lastMessage = document.querySelector(".messages > div:last-of-type");
+    lastMessage.scrollIntoView();
 };
 
 socket.on('receivedMessage', function(message) {
@@ -22,20 +26,33 @@ $('#user').submit(function(event) {
     event.preventDefault();
 
     const author = $('input[name=username]').val();
-
     const usernameForm = document.querySelector('.user-container');
-    usernameForm.classList.remove('user-container');
-    usernameForm.classList.add('form-not-visible');
 
-    const chatContainer = document.querySelector('.chat-container');
-    chatContainer.innerHTML = `
-        <div class="messages"></div>
-        <div class="horizontal-container">
-            <p class="username">${author}:</p>
-            <input type="text" name="message" class="message" placeholder="Digite sua mensagem">
-        </div>
-        <button type="submit">Enviar</button>
-    `;
+    if (author.length > 0 && author.length <= 10) {
+        usernameForm.classList.remove('user-container');
+        usernameForm.classList.add('form-not-visible');
+
+        const chatContainer = document.querySelector('.chat-container');
+        chatContainer.innerHTML = `
+            <div class="messages"></div>
+            <div class="horizontal-container">
+                <p class="username">${author}:</p>
+                <input type="text" name="message" class="message-input" placeholder="Digite sua mensagem">
+            </div>
+            <button type="submit">Enviar</button>
+        `;
+    } else {
+        console.log('deu ruim');
+        usernameForm.innerHTML = `
+            <input type="text" name="username" placeholder="Digite seu nome de usuário" class="disabled" disabled>
+            <div>
+                <p class="alert">Mínimo de 1 caracter e máximo de 10 caracteres. Tente novamente.</p>
+            </div>
+            <button type="submit" class="disabled" disabled>Entrar no chat</button>
+        `;
+
+        setTimeout(function(){location.reload()}, 2000);
+    };
 });
 
 $('#chat').submit(function(event) {
@@ -43,14 +60,20 @@ $('#chat').submit(function(event) {
 
     const message = $('input[name=message]').val();
 
-    const author = document.querySelector('.username').innerHTML;
+    if (message.length > 0) {
+        const author = document.querySelector('.username').innerHTML;
+        
+        let now = dayjs();
+        now = now.format('HH:mm:ss');
 
-    const messageObject = { 
-        message: message,
-        author: author
+        const messageObject = { 
+            message: message,
+            author: author,
+            time: now
+        };
+    
+        renderMessage(messageObject);
+    
+        socket.emit('sendMessage', messageObject);
     };
-
-    renderMessage(messageObject);
-
-    socket.emit('sendMessage', messageObject);
 });
