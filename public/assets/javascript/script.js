@@ -42,7 +42,6 @@ $('#user').submit(function(event) {
             <button type="submit">Enviar</button>
         `;
     } else {
-        console.log('deu ruim');
         usernameForm.innerHTML = `
             <input type="text" name="username" placeholder="Digite seu nome de usuário" class="disabled" disabled>
             <div>
@@ -51,7 +50,7 @@ $('#user').submit(function(event) {
             <button type="submit" class="disabled" disabled>Entrar no chat</button>
         `;
 
-        setTimeout(function(){location.reload()}, 2000);
+        setTimeout(function(){location.reload()}, 2000); // 2000 ms = 2 s
     };
 });
 
@@ -63,6 +62,7 @@ $('#chat').submit(function(event) {
     if (message.length > 0) {
         const author = document.querySelector('.username').innerHTML;
         
+        // obtem as horas da biblioteca dayjs
         let now = dayjs();
         now = now.format('HH:mm:ss');
 

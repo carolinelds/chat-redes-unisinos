@@ -23,17 +23,20 @@ app.use('/', (req,res) => {
 
 let messages = [];
 
+//io/socket.on('evento', fazalgumacoisa) ==> back/servidor
+//socket.emit('sendMessage', mensagem) ==> frontend (pasta public)
+
 io.on('connection', socket => {
     console.log(`Socket conectado: ${socket.id}`);
 
     socket.emit('previousMessages', messages);
 
-    socket.on('sendMessage', data => {
-      messages.push(data);
-      socket.broadcast.emit('receivedMessage', data);
-    })
+    socket.on('sendMessage', messageObject => {
+      messages.push(messageObject);
+      socket.broadcast.emit('receivedMessage', messageObject);
+    });
 });
 
-server.listen(3000);
+server.listen(3000); // porta
 
 
