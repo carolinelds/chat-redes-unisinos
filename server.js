@@ -5,6 +5,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import ejs from 'ejs';
 
+// realiza as configuracoes da aplicacao
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -18,25 +19,25 @@ app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 
 app.use('/', (req,res) => {
-    res.render('index.html');
+    res.render('index.html'); // Renderiza a pagina principal html
 });
 
-let messages = [];
+let messages = []; // cria array para armazenar as mensagens
 
 //io/socket.on('evento', fazalgumacoisa) ==> back/servidor
-//socket.emit('sendMessage', mensagem) ==> frontend (pasta public)
+//socket.emit('evento', mensagem) ==> frontend (pasta public)
 
-io.on('connection', socket => {
+io.on('connection', socket => { // funcao io.on disparada em um evento de uma conexao feita
     console.log(`Socket conectado: ${socket.id}`);
 
     socket.emit('previousMessages', messages);
 
     socket.on('sendMessage', messageObject => {
-      messages.push(messageObject);
-      socket.broadcast.emit('receivedMessage', messageObject);
+      messages.push(messageObject); // Adiciona mensagem ao array
+      socket.broadcast.emit('receivedMessage', messageObject); // Envia broadcast permitindo que todos registrados no chat recebam a mensagem
     });
 });
 
-server.listen(3000); // porta
+server.listen(3000); // Define porta para receber conexão. 
 
 
