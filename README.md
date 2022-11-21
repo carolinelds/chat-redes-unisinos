@@ -1,6 +1,6 @@
 # Chat no modelo cliente-servidor com sockets
 
-Aplicação desenvolvida para a disciplina de Fundamentos de Redes de Computadores da Universidade do Vale do Rio Sinos.
+Aplicação desenvolvida em grupo de 4 alunos para a disciplina de Fundamentos de Redes de Computadores da Universidade do Vale do Rio Sinos.
 
 ## Como executar
 
